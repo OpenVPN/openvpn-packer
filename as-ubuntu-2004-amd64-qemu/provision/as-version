@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. /usr/local/openvpn_as/etc/VERSION
+
+sed -i 's#^\(OpenVPN Access Server Appliance \)\([^\\]\+\)\( .*\)#\1'"$AS_VERSION"'\3#g' /etc/issue
+sed -i 's#^\(echo "Welcome to OpenVPN Access Server Appliance \)\(.*\)#\1'"$AS_VERSION"'"#g' /etc/update-motd.d/00-header

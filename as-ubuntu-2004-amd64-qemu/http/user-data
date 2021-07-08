@@ -1,0 +1,40 @@
+#cloud-config
+autoinstall:
+  version: 1
+  # Fetch latest version of autoinstall before starting
+  refresh-installer:
+    update: true
+  # Prevent packer from connecting to the _installer_ with SSH and trying to
+  # start provisioning.
+  #
+  # https://tlhakhan.medium.com/ubuntu-server-20-04-autoinstall-2e5f772b655a
+  #
+  early-commands:
+    - "systemctl stop ssh"
+  locale: en_US.UTF-8
+  keyboard:
+    layout: us
+  apt:
+    preserve_sources_list: false
+    primary:
+        - arches: [i386, amd64]
+          uri: "http://archive.ubuntu.com/ubuntu"
+        - arches: [default]
+          uri: "http://ports.ubuntu.com/ubuntu-ports"
+    geoip: true
+  storage:
+    layout:
+      name: lvm
+  identity:
+    hostname: ubuntu
+    username: openvpnas
+    password: $6$yV./p0CXmpUSsU1c$gXKXP/7hpiIyQKEl0yV5OH9/82vXQ9QdPz2heaf6fPA6OOuh1aERzzCv2573x0tVU/Rx7ZjIk6M022AFRZDf2.
+  ssh:
+    allow-pw: true
+    install-server: true
+  late-commands:
+    - "echo 'openvpnas ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/openvpnas"
+    - "chmod 440 /target/etc/sudoers.d/openvpnas"
+  user-data:
+    timezone: UTC
+    disable_root: true

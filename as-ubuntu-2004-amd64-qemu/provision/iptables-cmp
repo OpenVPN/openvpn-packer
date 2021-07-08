@@ -1,0 +1,13 @@
+#!/bin/bash
+
+while true; do
+        iptables-save | egrep -v '^#' | egrep -v ']$' > /tmp/1.diff
+        sleep 1
+        iptables-save | egrep -v '^#' | egrep -v ']$' > /tmp/2.diff
+        diff /tmp/1.diff /tmp/2.diff > /tmp/ip.diff
+        if [[ $? == 1 ]]; then
+                date
+                cat /tmp/ip.diff
+                echo -e '\n'
+        fi
+done

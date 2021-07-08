@@ -1,0 +1,14 @@
+[Unit]
+Description=AS Initialization Service
+Before=multi-user.target
+After=network-online.target
+After=systemd-journald-dev-log.socket
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+Restart=no
+ExecStart=/sbin/as-svc.sh
+
+[Install]
+WantedBy=multi-user.target
