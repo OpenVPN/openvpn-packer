@@ -40,6 +40,10 @@ chmod 766 /var/log/chrony
 rm -rf /tmp/*
 rm -rf /var/cache/apt/*.bin /var/lib/apt/lists/*
 
+truncate /var/log/syslog --size 0
+truncate /var/log/auth.log --size 0
+truncate /var/log/dpkg.log --size 0
+
 apt-get autoremove --purge -y
 apt-get clean
 apt-get autoclean
