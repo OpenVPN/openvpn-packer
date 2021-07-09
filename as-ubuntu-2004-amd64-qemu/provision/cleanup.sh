@@ -9,12 +9,13 @@ systemctl disable openvpnas
 
 rm -f /etc/apt/sources.list
 
-#rm /etc/update-motd.d/80-esm
-#rm /etc/update-motd.d/10-help-text
-#rm /etc/update-motd.d/50-motd-news
-#rm /etc/update-motd.d/80-livepatch
-#rm /etc/update-motd.d/91-release-upgrade
-#rm /etc/update-motd.d/95-hwe-eol
+rm /etc/update-motd.d/10-help-text
+rm /etc/update-motd.d/50-motd-news
+rm /etc/update-motd.d/85-fwupd
+rm /etc/update-motd.d/88-esm-announce
+rm /etc/update-motd.d/91-contract-ua-esm-status
+rm /etc/update-motd.d/91-release-upgrade
+rm /etc/update-motd.d/95-hwe-eol
 
 # remove /etc/network/interfaces to work around cloud-init netplan renderer issue
 # rm /etc/network/interfaces
@@ -27,6 +28,7 @@ rm -f /usr/local/openvpn_as/init.log
 rm -rf /home/openvpnas/
 mkdir /home/openvpnas/
 cp /root/.bashrc /root/.profile /home/openvpnas/
+chown openvpnas:openvpnas /home/openvpnas/.bashrc /home/openvpnas/.profile
 rm -rf /root/*
 rm -rf /root/.ssh/
 rm -f /etc/ssh/ssh_host_*
