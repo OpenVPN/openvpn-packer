@@ -24,7 +24,7 @@ autoinstall:
     geoip: true
   storage:
     layout:
-      name: lvm
+      name: direct
   identity:
     hostname: ubuntu
     username: openvpnas
