@@ -34,7 +34,7 @@ source "qemu" "iso" {
     "ds=nocloud-net;s=http://{{.HTTPIP}}:{{.HTTPPort}}/ ",
     "<enter>"
     ]
-  http_directory       = "as-ubuntu-2004-amd64-qemu/http"
+  http_directory       = "as-ubuntu-2004-amd64/http"
   shutdown_command     = "echo 'packer' | sudo -S shutdown -P now"
   # These are required or Packer will panic, even if no provisioners are not
   # configured
@@ -74,21 +74,36 @@ build {
 
   sources = ["source.qemu.img"]
 
+
+  # These scripts are persistent and may run after initial provisioning
   provisioner "file" {
-    sources     = [ "as-ubuntu-2004-amd64-qemu/provision/as-svc.sh",
-                    "as-ubuntu-2004-amd64-qemu/provision/asinit.service",
-                    "as-ubuntu-2004-amd64-qemu/provision/as-version",
-                    "as-ubuntu-2004-amd64-qemu/provision/iptables-cmp" ]
+    sources     = [
+                    "as-ubuntu-2004-amd64/provision/as-svc.sh",
+                    "as-ubuntu-2004-amd64/provision/asinit.service",
+                    "as-ubuntu-2004-amd64/provision/as-version",
+                    "as-ubuntu-2004-amd64/provision/iptables-cmp"
+                  ]
     destination = "/tmp/"
   }
 
-  provisioner "shell" {
-    script          = "as-ubuntu-2004-amd64-qemu/provision/init-generic.sh"
-    execute_command = "sudo bash {{.Path}}"
+  # Upload the provisioning scripts
+  provisioner "file" {
+    sources     = [
+                    "as-ubuntu-2004-amd64/provision/move-persistent-scripts.sh",
+                    "as-ubuntu-2004-amd64/provision/install-access-server.sh",
+                    "as-ubuntu-2004-amd64/provision/enable-installation-wizard.sh",
+                    "as-ubuntu-2004-amd64/provision/set-hostname.sh",
+                    "as-ubuntu-2004-amd64/provision/preserve-hostname.sh",
+                    "as-ubuntu-2004-amd64/provision/set-motd.sh",
+                    "as-ubuntu-2004-amd64/provision/cleanup.sh",
+                    "as-ubuntu-2004-amd64/provision/disable-ssh-password-auth.sh"
+                  ]
+    destination = "/tmp/"
   }
 
+  # Run the provisioning scripts
   provisioner "shell" {
-    script          = "as-ubuntu-2004-amd64-qemu/provision/cleanup.sh"
+    script          = "as-ubuntu-2004-amd64/provision/init-qemu.sh"
     execute_command = "sudo bash {{.Path}}"
   }
 }
